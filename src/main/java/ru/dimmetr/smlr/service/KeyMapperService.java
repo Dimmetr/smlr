@@ -6,8 +6,8 @@ public interface KeyMapperService {
 
     interface Get {}
 
-    Add add(String key, String link);
-
     Get getLink(String key);
+
+    String add(String link);
 }
 

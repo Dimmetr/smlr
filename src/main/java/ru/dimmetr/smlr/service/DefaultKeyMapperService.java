@@ -1,31 +1,38 @@
 package ru.dimmetr.smlr.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 public class DefaultKeyMapperService implements KeyMapperService {
 
-    private Map<String, String> map= new ConcurrentHashMap<>();
+    @Autowired
+    private KeyConverterService converter;
+
+    private AtomicLong sequence = new AtomicLong(10000000L);
+
+    private Map<Long, String> map = new ConcurrentHashMap<>();
 
     @Override
-    public Add add(String key, String link) {
-        if (map.containsKey(key)) {
-            return new AlreadyExist(key);
+    public Get getLink(String key) {
+        long id = converter.keyToId(key);
+        String result = map.get(id);
+        if (result == null) {
+            return new NotFound(key);
         } else {
-            map.put(key, link);
-            return new Success(key, link);
+            return new Link(result);
         }
     }
 
     @Override
-    public Get getLink(String key) {
-        if (map.containsKey(key)) {
-            return new Link(map.get(key));
-        } else {
-            return new NotFound(key);
-        }
+    public String add(String link) {
+        long id = sequence.getAndIncrement();
+        String key = converter.idToKey(id);
+        map.put(id, link);
+        return key;
     }
 }

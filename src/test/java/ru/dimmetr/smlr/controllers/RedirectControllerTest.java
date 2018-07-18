@@ -33,7 +33,7 @@ public class RedirectControllerTest {
 
     @Autowired
     @InjectMocks
-    private RedirectController controller;
+    public RedirectController controller;
 
     @Before
     public void setup() {
