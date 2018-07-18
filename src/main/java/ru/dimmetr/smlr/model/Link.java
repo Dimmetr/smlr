@@ -27,6 +27,14 @@ public class Link {
         this.id = id;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getText() {
         return text;
     }
@@ -52,7 +60,7 @@ public class Link {
 
     @Override
     public String toString() {
-        return "Link{" +
+        return "Link.java{" +
                 "text='" + text + '\'' +
                 ", id=" + id +
                 '}';

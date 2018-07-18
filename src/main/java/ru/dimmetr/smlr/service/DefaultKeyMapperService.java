@@ -2,10 +2,11 @@ package ru.dimmetr.smlr.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import ru.dimmetr.smlr.model.Link;
+import ru.dimmetr.smlr.model.repositories.LinkRepository;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Optional;
 
 @Component
 public class DefaultKeyMapperService implements KeyMapperService {
@@ -13,26 +14,22 @@ public class DefaultKeyMapperService implements KeyMapperService {
     @Autowired
     private KeyConverterService converter;
 
-    private AtomicLong sequence = new AtomicLong(10000000L);
-
-    private Map<Long, String> map = new ConcurrentHashMap<>();
+    @Autowired
+    private LinkRepository repo;
 
     @Override
     public Get getLink(String key) {
-        long id = converter.keyToId(key);
-        String result = map.get(id);
-        if (result == null) {
-            return new NotFound(key);
+        Optional<Link> result = repo.findOne(converter.keyToId(key));
+        if (result.isPresent()) {
+            return new ru.dimmetr.smlr.service.Link(result.get().getText());
         } else {
-            return new Link(result);
+            return new NotFound(key);
         }
     }
 
     @Override
+    @Transactional
     public String add(String link) {
-        long id = sequence.getAndIncrement();
-        String key = converter.idToKey(id);
-        map.put(id, link);
-        return key;
+        return converter.idToKey(repo.save(new Link(link)).getId());
     }
 }

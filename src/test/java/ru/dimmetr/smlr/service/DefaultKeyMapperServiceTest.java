@@ -6,6 +6,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import ru.dimmetr.smlr.model.repositories.LinkRepository;
+
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -21,10 +24,15 @@ public class DefaultKeyMapperServiceTest {
     private final static String KEY_B = "cde";
     private final static long ID_A = 10000000L;
     private final static long ID_B = 10000001L;
+    private ru.dimmetr.smlr.model.Link LINK_OBJ_A = new ru.dimmetr.smlr.model.Link(LINK_A, ID_A);
+    private ru.dimmetr.smlr.model.Link LINK_OBJ_B = new ru.dimmetr.smlr.model.Link(LINK_B, ID_B);
 
 
     @Mock
     private KeyConverterService converter;
+
+    @Mock
+    private LinkRepository repo;
 
     @Before
     public void setup() {
@@ -34,6 +42,12 @@ public class DefaultKeyMapperServiceTest {
         Mockito.when(converter.idToKey(ID_A)).thenReturn(KEY_A);
         Mockito.when(converter.keyToId(KEY_B)).thenReturn(ID_B);
         Mockito.when(converter.idToKey(ID_B)).thenReturn(KEY_B);
+
+        Mockito.when(repo.findOne(Mockito.anyObject())).thenReturn(Optional.empty());
+        Mockito.when(repo.save(new ru.dimmetr.smlr.model.Link(LINK_A))).thenReturn(LINK_OBJ_A);
+        Mockito.when(repo.save(new ru.dimmetr.smlr.model.Link(LINK_B))).thenReturn(LINK_OBJ_B);
+        Mockito.when(repo.findOne(ID_A)).thenReturn(Optional.of(LINK_OBJ_A));
+        Mockito.when(repo.findOne(ID_B)).thenReturn(Optional.of(LINK_OBJ_B));
     }
 
     @Test
