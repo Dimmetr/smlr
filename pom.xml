@@ -91,6 +91,9 @@
 	</dependencies>
 
 	<build>
+		<sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
+		<testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>
+		<finalName>smlr</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
