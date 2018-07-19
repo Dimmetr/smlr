@@ -62,4 +62,13 @@ public class AddControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.link", Matchers.equalTo(LINK)));
     }
 
+    @Test
+    public void whenUserAddLinkByFormHeTakesWebPage() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/addhmtl")
+                .param("link", LINK)
+        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString(KEY)))
+                .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString(LINK)));
+    }
 }

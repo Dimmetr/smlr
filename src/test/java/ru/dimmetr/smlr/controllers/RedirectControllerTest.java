@@ -61,12 +61,18 @@ public class RedirectControllerTest {
                 .andExpect(MockMvcResultMatchers.header().string(HEADER_NAME, HEADER_VALUE));
     }
 
-    private final static String BAD_PATH = "/olololo";
+    private final static String BAD_PATH = "olololo";
     private final static int NOT_FOUND = 404;
 
     @Test
     public void controllerMustReturn404ifBadKey() throws Exception{
         mockMvc.perform(MockMvcRequestBuilders.get("/" + BAD_PATH))
                 .andExpect(MockMvcResultMatchers.status().is(NOT_FOUND));
+    }
+
+    @Test
+    public void howWorksFine() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders.get("/"))
+                .andExpect(MockMvcResultMatchers.view().name("home"));
     }
 }

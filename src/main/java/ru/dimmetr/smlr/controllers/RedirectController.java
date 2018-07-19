@@ -11,7 +11,6 @@ import ru.dimmetr.smlr.service.NotFound;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
-@RequestMapping("/{key}")
 public class RedirectController {
 
     private static final String HEADER_NAME = "Location";
@@ -19,7 +18,12 @@ public class RedirectController {
     @Autowired
     private KeyMapperService service;
 
-    @RequestMapping()
+    @RequestMapping("/")
+    public String home() {
+        return "home";
+    }
+
+    @RequestMapping("/{key}")
     public void redirect(@PathVariable(value = "key") String key, HttpServletResponse response) {
         KeyMapperService.Get result = service.getLink(key);
 
